@@ -1,0 +1,21 @@
+---
+title: "Descriptive Statistics for Assessment"
+output: html_document
+---
+
+# 1. Measures of Central Tendency
+Central tendency represents the single value that attempts to describe a set of data by identifying the central position within that set of data.
+
+## Mean and Median
+The **Mean** is the arithmetic average, and the **Median** is the middle score.
+
+```{r}
+# Student score dataset
+student_scores <- c(65, 78, 82, 91, 74, 88, 95, 60, 84, 79)
+
+# Calculating Central Tendency
+mean(student_scores)
+median(student_scores)
+# Calculating Variability
+sd(student_scores)
+var(student_scores)
