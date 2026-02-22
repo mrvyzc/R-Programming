@@ -20,11 +20,23 @@ Below you can find my study notes and statistical reports.
 ### 1. [Essential R Commands](Essential-R-Commands.html)
 Introduction to core R functions for system management and data creation.
 
+print(), ls(), help(), args(), c(), seq()
+
 ### 2. [Descriptive Statistics](descriptive-statistics.html)
 Detailed analysis of central tendency and variability in educational data.
 
+mean(), median(), sd(), var()
+
 ### 3. [Data Transformation and Ranking](Data-Transformation-and-Ranking-in-R.html)
 Techniques for data type conversion, indexing, and ranking student performance.
+
+as.character(), as.numeric()
+
+Indexing and Selection with brackets []
+
+max(), which.max()
+
+sort(), order() and rank()
 
 ---
 
