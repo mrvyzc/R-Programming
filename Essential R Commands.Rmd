@@ -1,0 +1,110 @@
+---
+
+title: "Essential R Commands for Data Management"
+
+output: html_document
+
+---
+
+
+
+# 1. System and Help Commands
+
+These commands are used to manage your workspace and find information about R functions.
+
+
+
+## ls() - List Objects
+
+In measurement studies, you may work with multiple datasets. The `ls()` command lists all variables and objects currently stored in your environment.
+
+
+
+## help() or ? - Access Documentation
+
+if you are unsure how a function (like 'mean')works, you can access its official documentation.
+
+
+
+## args() - Function Arguments
+
+Before using a function, you might want to see what parameters it requires. args() provides a quick look at the function's arguments.
+
+
+
+## print() - Displaying Output
+
+While R often displays results automatically, print() is the formal way to show the content of an object.
+
+
+
+## c() - Combine / Concatenate
+
+This is the most frequently used function in R. It combines individual elements into a single vector (a list of numbers or text).
+
+
+
+## seq() - Sequence Generation
+
+This function is extremely useful for generating regular sequences of numbers, such as creating student IDs from 1 to 100.
+
+
+
+```{r}
+
+# Let's create a temporary variable
+
+test_score <- 95
+
+
+
+# List all objects in the environment
+
+ls()
+
+
+
+# Both commands do the same thing
+
+help(mean)
+
+# ?mean
+
+
+
+# See the arguments for the mean function
+
+args(mean)
+
+
+
+message <- "Welcome to R Programming"
+
+print(message)
+
+
+
+# Combining student scores into a vector
+
+student_scores <- c(85, 70, 92, 65, 88)
+
+student_scores
+
+
+
+# Create a sequence from 1 to 10
+
+student_ids <- seq(from = 1, to = 10, by = 1)
+
+student_ids
+
+
+
+# Create a sequence with increments of 5
+
+increments <- seq(0, 50, 5)
+
+increments
+
+
+
