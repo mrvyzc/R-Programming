@@ -1,0 +1,79 @@
+---
+title: "Data Transformation and Ranking in R"
+output: html_document
+---
+
+# 1. Data Type Conversion
+In R, variables can be stored as different types (numeric, character, etc.). Sometimes we need to convert them, especially when importing data from external sources.
+
+## as.character() and as.numeric()
+`as.character()` converts a value to text, while `as.numeric()` converts it to a number. 
+
+```{r}
+# A score stored as a character
+raw_score <- "85"
+# Convert to numeric to perform calculations
+numeric_score <- as.numeric(raw_score)
+
+# A student ID stored as a number
+student_no <- 101
+# Convert to character for labeling
+id_label <- as.character(student_no)
+
+numeric_score * 2
+```
+
+# 2. Indexing and Selection
+To analyze specific parts of our data, we use square brackets [].
+
+```{r}
+scores <- c(55, 70, 85, 90, 45)
+
+# Select the 3rd student's score
+scores[3]
+
+# Select multiple scores (1st and 4th)
+scores[c(1, 4)]
+```
+
+# 3. Finding Maximum Values
+In assessment, we often need to identify the top performance. 
+
+## max() and which.max()
+
+max() gives the highest value, while which.max() tells you the position (index) of that value.
+
+```{r}
+exam_results <- c(65, 88, 92, 74, 95, 81)
+
+# What is the highest score?
+max(exam_results)
+
+# Which student (by position) got the highest score?
+which.max(exam_results)
+```
+
+# 4. Sorting and Ranking
+Ordering data helps us see the performance distribution from lowest to highest or vice versa.
+
+# sort(), order() and rank()
+
+sort(): Returns the values in order.
+
+order(): Returns the indices in the sorted order (useful for sorting whole tables).
+
+rank(): Assigns a rank to each element (1st place, 2nd place, etc.).
+
+```{r}
+final_scores <- c(70, 95, 85, 60)
+
+# Sort scores in ascending order
+sort(final_scores)
+
+# Get the indices to sort the scores
+order(final_scores)
+
+# Rank the students based on their scores
+rank(final_scores)
+```
+
