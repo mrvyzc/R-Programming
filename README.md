@@ -1,2 +1,2 @@
-# Olcme-ai-academic
-YL çalışmaları ve YZ notları
+# R basics - Notes for beginners
+Definitions, Commands etc.
