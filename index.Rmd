@@ -49,6 +49,15 @@ which()
 
 %in% 
 
+### 5. [Data Visualization Basics](Data-Visualization-Basics.html)
+Creating scatter plots, histograms, and boxplots to visualize score distributions and correlations.
+
+plot()
+
+hist()
+
+boxplot()
+
 ---
 
 ---
