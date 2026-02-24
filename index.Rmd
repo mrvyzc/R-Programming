@@ -38,6 +38,19 @@ max(), which.max()
 
 sort(), order() and rank()
 
+### 4. [Data Counting and Matching](Data-Counting-and-Matching.html)
+Using commands below to filter and analyze measurement data.
+
+sum()
+
+nrow()
+
+which()
+
+%in% 
+
+---
+
 ---
 
 ## 📖 References & Methodology
