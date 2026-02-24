@@ -1,0 +1,71 @@
+---
+title: "Data Counting and Matching in R"
+output: html_document
+---
+
+# 1. Basic Calculations and Dimensions
+
+Before starting an analysis, we may need to know the total score or the size of our dataset.
+
+## sum(), nrow(), and ncol()
+
+sum() adds up all numeric values in a vector.
+
+nrow() returns the number of rows (e.g., number of students).
+
+ncol() returns the number of columns (e.g., number of variables or test items).
+
+```{r}
+scores <- c(10, 20, 30, 40)
+# Total score
+sum(scores)
+
+# Creating a small data frame (example table)
+df <- data.frame(ID = 1:5, Score = c(80, 90, 70, 85, 60))
+
+# How many students (rows) are there?
+nrow(df)
+
+# How many variables (columns) are there?
+ncol(df)
+```
+
+# 2. Finding Specific Indices
+
+Sometimes we don't want the value itself, but its location in the list.
+
+## which()
+
+which() returns the positions (indices) of elements that meet a specific condition.
+
+```{r}
+exam_scores <- c(45, 70, 85, 90, 30, 85)
+
+# Which indices have a score higher than 80?
+which(exam_scores > 80)
+
+# Which index is exactly 30?
+which(exam_scores == 30)
+```
+
+# 3. Matching and Membership
+
+These functions are used to compare two different lists (e.g., comparing a student list with a prize-winner list).
+
+## %in% and match()
+
+%in% checks if each element of the first list exists in the second list (returns TRUE/FALSE).
+
+match() returns the position of the first occurrence of a value in another vector.
+
+```{r}
+all_students <- c("Alice", "Bob", "Charlie", "David")
+winners <- c("Bob", "David")
+
+# Is each student a winner? (Logical check)
+all_students %in% winners
+
+# Where is "Charlie" located in the student list?
+match("Charlie", all_students)
+```
+
