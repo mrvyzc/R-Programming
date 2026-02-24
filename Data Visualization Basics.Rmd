@@ -1,0 +1,73 @@
+---
+title: "Data Visualization Basics"
+output: html_document
+---
+
+# 1. Scatter Plots
+Scatter plots are used to visualize the relationship between two numeric variables. In
+
+measurement, we often use this to see the correlation between two different tests.
+
+## plot()
+
+The `plot()` function is the most basic way to create scatter plots or line graphs.
+
+```{r}
+# Midterm and Final scores of 6 students
+midterm <- c(50, 65, 70, 85, 90, 45)
+final <- c(55, 60, 75, 80, 95, 50)
+
+# Create a scatter plot
+plot(midterm, final, 
+     main = "Relationship Between Midterm and Final",
+     xlab = "Midterm Scores", 
+     ylab = "Final Scores",
+     col = "blue", 
+     pch = 19) # pch defines the point shape
+```
+
+# 2. Histograms
+A histogram shows the frequency distribution of a single variable. It is essential for
+
+checking if test scores follow a normal distribution.
+
+## hist()
+
+hist() groups data into bins and shows how many observations fall into each bin.
+
+```{r}
+# Simulated scores for 100 students
+set.seed(123)
+all_scores <- rnorm(100, mean = 70, sd = 10)
+
+# Create a histogram
+hist(all_scores, 
+     main = "Distribution of Exam Scores",
+     xlab = "Scores", 
+     col = "darkgreen", 
+     border = "white")
+```
+
+# 3. Boxplots
+Boxplots (box-and-whisker plots) provide a visual summary of the data, including the median, 
+
+quartiles, and potential outliers.
+
+## boxplot()
+
+It is perfect for comparing different groups or identifying students who performed
+
+significantly differently from the rest.
+
+```{r}
+# Scores of two different classes
+class_A <- c(60, 70, 75, 80, 85, 90, 95, 100)
+class_B <- c(40, 50, 55, 60, 65, 70, 75, 80)
+
+# Create a boxplot comparing two groups
+boxplot(class_A, class_B, 
+        main = "Comparing Class A and Class B Performance",
+        names = c("Class A", "Class B"),
+        col = c("lightblue", "orange"),
+        ylab = "Scores")
+```
