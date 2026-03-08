@@ -38,9 +38,27 @@ max(), which.max()
 
 sort(), order() and rank()
 
-### 4. [Beginning Exercise](Beginning-Exercise.html)
-Creating vectors for scores of two lesson and finding minimum, maximum, 
-mean, standard deviation,variation. 
+### 4. [Data Counting and Matching](Data-Counting-and-Matching.html)
+Using commands below to filter and analyze measurement data.
+
+sum()
+
+nrow()
+
+which()
+
+%in% 
+
+### 5. [Data Visualization Basics](Data-Visualization-Basics.html)
+Creating scatter plots, histograms, and boxplots to visualize score distributions and correlations.
+
+plot()
+
+hist()
+
+boxplot()
+
+---
 
 ---
 
