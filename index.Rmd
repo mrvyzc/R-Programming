@@ -58,6 +58,10 @@ hist()
 
 boxplot()
 
+### 6. [Beginning Exercises](Beginning-Exercises.html)
+Creating vectors for scores of two lesson and finding minimum, maximum, 
+mean, standard deviation,variation. 
+
 ---
 
 ---
