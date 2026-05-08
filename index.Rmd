@@ -62,6 +62,9 @@ boxplot()
 Creating vectors for scores of two lesson and finding minimum, maximum, 
 mean, standard deviation,variation. 
 
+### 7.[Item Analysis](Item-Analysis.html)
+Item Difficulty, Item Discrimination and Item Distractor Analysis
+
 ---
 
 ---
