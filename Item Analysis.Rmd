@@ -1,0 +1,291 @@
+---
+title: "Item Analysis on R"
+author: "Merve Yazıcı Köker"
+date: "2026-05-08"
+output: html_document
+---
+# 1. PAKET YUKLEME ve CAGIRMA
+
+install.packages("readxl") # excel verisi okuma
+
+install.packages("tidyverse") # veri manipulasyonu
+
+install.packages("psych") # betimsel istatistik
+
+install.packages("CTT") # KTK analizi (gucluk, ayirt edicilik)
+
+install.packages("ShinyItemAnalysis") # analiz, gelismis gorseller
+
+install.packages("ggplot2") # veri gorsellestirme
+
+install.packages("dplyr")
+
+```{r paketler, echo=TRUE, message=FALSE, warning=FALSE}
+
+library(readxl)
+
+library(tidyverse)
+
+library(psych)
+
+library(CTT)
+
+library(ShinyItemAnalysis)
+
+library(ggplot2)
+
+library(dplyr)
+```
+
+# 2. VERI YUKLEME
+
+```{r setup}
+
+puanlar <- read_excel("C:/Users/MERVE/Desktop/duzenlipuan.xlsx")
+
+head(puanlar)
+```
+
+# 3. MADDE GUCLUGU ANALIZI
+
+```{r setup1}
+# maddeleri bir dosyaya atıyoruz ve betimsel istatistik alıyoruz
+
+maddeler <- puanlar %>% 
+  select(m1:m10)
+
+head(maddeler)
+describe(maddeler)
+
+# toplam sütununu bir dosyaya atıyoruz ve betimsel istatistik alıyoruz
+
+toplam <- puanlar %>%
+  select(toplam)
+
+describe(toplam)
+```
+
+## Madde güçlüğü hesaplatıp tablo haline getiriyoruz.
+
+```{r setup2}
+madde_analiz_tablosu <- maddeler %>%
+  summarise(across(everything(), mean, na.rm = TRUE)) %>%
+  pivot_longer(everything(), names_to = "Madde", values_to = "Gucluk") %>%
+  mutate(Durum = case_when(
+    Gucluk > 0.80 ~ "Cok Kolay",
+    Gucluk > 0.60 ~ "Kolay",
+    Gucluk > 0.40 ~ "Orta",
+    Gucluk > 0.20 ~ "Zor",
+    TRUE ~ "Çok Zor"
+  ))
+
+print(madde_analiz_tablosu)
+```
+
+## Madde güçlüğü analizini görselleştirme
+
+```{r setup3}
+ggplot(madde_analiz_tablosu, aes(x = reorder(Madde, Gucluk), y = Gucluk, fill = Durum)) +
+  geom_col(show.legend = TRUE) +
+  geom_text(aes(label = round(Gucluk, 2)), vjust = -0.5) +
+  scale_fill_brewer(palette = "RdYlGn") + # Renk paleti (Zor=Kırmızı, Kolay=Yeşil)
+  labs(title = "Madde Gucluk Dagilimi",
+       subtitle = "Maddelerin dogru cevaplanma oranlari",
+       x = "Maddeler (Zordan Kolaya Sirali)",
+       y = "Gucluk Indeksi (p)") +
+  theme_minimal() +
+  ylim(0, 1)
+```
+
+# 4. MADDE AYIRT EDICILIK ANALIZI
+
+## Alfa hesaplaması 
+
+```{r setup4}
+ayirtedicilik <- psych::alpha(maddeler)
+print(ayirtedicilik)
+```
+
+## Madde ayırt edicilik hesaplatıp tablo haline getiriyoruz.
+
+```{r setup5}
+ayirt_edicilik_tablosu <- ayirtedicilik$item.stats %>%
+  rownames_to_column(var = "Madde") %>%
+  select(Madde, r.drop) %>% # 'r.drop' = duzeltilmis madde-toplam korelasyonu
+  rename(Ayirt_Edicilik = r.drop) %>%
+  mutate(Karar = case_when(
+    Ayirt_Edicilik >= 0.40 ~ "mukemmel",
+    Ayirt_Edicilik >= 0.30 ~ "iyi (gelistirilebilir)",
+    Ayirt_Edicilik >= 0.20 ~ "duzeltilmeli",
+    TRUE ~ "Zayif (cikarilmali)"
+  ))
+print(ayirt_edicilik_tablosu)
+```
+
+## Madde ayirt edicilik gorsellestirme
+
+```{r setup6}
+ggplot(ayirt_edicilik_tablosu, aes(x = Madde, y = Ayirt_Edicilik)) +
+ 
+  geom_col(fill = "steelblue", alpha = 0.8) + 
+  
+  # Kritik Eşik Çizgisi: 0.30 standardı 
+  geom_hline(yintercept = 0.30, linetype = "dashed", color = "red", size = 1) +
+  
+  # degerleri sutun uzerine yaz
+  geom_text(aes(label = round(Ayirt_Edicilik, 2)), vjust = -0.5, size = 3.5) +
+  
+  
+  labs(title = "Madde Ayirt Edicilik Indeksleri",
+       subtitle = "kirmizi kesikli cizgi: (0.30) basari esiği",
+       x = "Maddeler",
+       y = "Ayirt Edicilik")
+```
+
+# 5. MADDE CELDIRICI ANALIZI
+
+## Veri yükleme, duzenleme
+
+```{r setup7}
+duzenlicevap <- read_excel("C:/Users/MERVE/Desktop/duzenlicevap.xlsx")
+head(duzenlicevap)
+
+# madde cevaplarını bir dosyaya atıyoruz
+secenek <- duzenlicevap %>% 
+  select(m1:m10)
+head(secenek)
+```
+
+## Celdirici analizi
+
+```{r setup8}
+celdirici_ozet <- secenek %>%
+  pivot_longer(everything(), names_to = "Madde", values_to = "Secenek") %>%
+  group_by(Madde, Secenek) %>%
+  summarise(Frekans = n(), .groups = 'drop') %>%
+  group_by(Madde) %>%
+  mutate(Oran = Frekans / sum(Frekans)) # secilme oranı hesabi
+
+print(celdirici_ozet)
+View(celdirici_ozet)
+```
+
+## Celdirici Analizi Tablosu
+
+```{r setup9}
+anahtar <- c("D", "C", "B", "B", "A", "B", "C", "B", "D", "A") 
+DistractorAnalysis(secenek, key = anahtar)
+```
+
+## Celdirici Analizi Gorsellestirme
+
+```{r setup10}
+# Grafik 1: sutun grafiği
+
+ggplot(celdirici_ozet, aes(x = Secenek, y = Oran)) +
+  geom_col() + 
+  
+  # Kritik Değişiklik: scales = "free_x" eklendi
+  facet_wrap(~Madde, scales = "free_x") + 
+  
+  labs(x = "Secenekler", y = "Secilme Orani") +
+  theme_minimal() +
+  
+  # Kritik Değişiklik: Yazı boyutunu biraz küçültelim (Örn: size = 8)
+  theme(axis.text.x = element_text(size = 8))
+
+# Grafik 2: Cubuk Grafik
+ggplot(celdirici_ozet, aes(x = Madde, y = Oran, fill = Secenek)) +
+  # Çubukları üst üste yığ (stack)
+  geom_bar(stat = "identity", position = "stack", width = 0.7) +
+  # Şıkların isimlerini çubukların üzerine yaz (Opsiyonel: kalabalık dersen silebilirsin)
+  geom_text(aes(label = ifelse(Oran > 0.05, Secenek, "")), 
+            position = position_stack(vjust = 0.5), size = 3, color = "white") +
+  # Renk paleti (Viridis veya Brewer akademik sunumlar için idealdir)
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "Maddelere Gore Secenek Dagilimi",
+       subtitle = "Tum maddelerin yanitlanma yapisi",
+       x = "Maddeler", y = "Oran (%)", fill = "Secenek") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+# 6. SONUC TABLO
+
+```{r setup11}
+# 1. Madde Güçlüğü (P)
+GUCLUK <- colMeans(maddeler, na.rm = TRUE)
+
+# 2. Madde Ayırt Ediciliği (r.drop)
+ayirtAnaliz <- psych::alpha(maddeler)
+AYIRTEDICILIK <- ayirtAnaliz$item.stats$r.drop
+
+# 3. Hepsini Birleştirip Karar Sütunu Ekleme
+final_rapor <- data.frame(
+  Madde = names(GUCLUK),
+  P = round(GUCLUK, 2),
+  Rjx = round(AYIRTEDICILIK, 2)
+) %>%
+  mutate(Degerlendirme = case_when(
+    Rjx >= 0.30 & (P >= 0.30 & P <= 0.70) ~ "Mukemmel Madde",
+    Rjx >= 0.30 & (P < 0.30 | P > 0.70) ~ "Iyi Madde",
+    Rjx < 0.30 & Rjx >= 0.20 ~ "Duzeltilmeli",
+    Rjx < 0.20 ~ "Cikarilmali",
+    TRUE ~ "Kontrol Edilmeli"
+  ))
+
+# Tabloyu yazdır
+print(final_rapor)
+```
+
+# 7. GUVENIRLIK ANALIZI
+
+```{r setup12}
+# 1. Genel Güvenirlik Analizi
+guvenirlik_analizi <- psych::alpha(maddeler)
+genel_alpha <- guvenirlik_analizi$total$raw_alpha
+
+# 2. Her madde silindiğinde Alfa'nın ne olacagini alalim
+# Bu, 'Bu madde testi bozuyor mu?' sorusunun cevabidir.
+alfa_if_deleted <- guvenirlik_analizi$alpha.drop %>%
+  rownames_to_column(var = "Madde") %>%
+  select(Madde, raw_alpha) %>%
+  rename(Madde_Silinirse_Alfa = raw_alpha)
+
+# 3. Mevcut final_rapor tablomuza bunu ekleyelim
+final_rapor_plus <- final_rapor %>%
+  left_join(alfa_if_deleted, by = "Madde")
+
+print(final_rapor_plus)
+```
+
+# 8. MADDE ANALIZI OZET MATRIS GORSELI
+
+```{r setup13}
+# Basit ve Etkili Ozet Grafik
+ggplot(final_rapor_plus, aes(x = P, y = Rjx, color = Degerlendirme)) +
+  # Maddeleri nokta olarak koy ve isimlerini yaz
+  geom_point(size = 5) +
+  geom_text(aes(label = Madde), vjust = -1.2, fontface = "bold") +
+  
+  # Kritik esik çizgileri (İdeal bölgeyi belirler)
+  geom_hline(yintercept = 0.30, linetype = "dashed", color = "darkgrey") + # Ayirt edicilik siniri
+  geom_vline(xintercept = c(0.30, 0.70), linetype = "dotted", color = "blue") + # Orta gucluk araligi
+  
+  # Renkleri ve Etiketleri Duzenle
+  scale_color_manual(values = c("Mukemmel" = "#2ecc71", 
+                                "iyi" = "#3498db", 
+                                "Revize Et" = "#f1c40f", 
+                                "Cikar" = "#e74c3c")) +
+  labs(title = "Madde Analizi Ozet Matrisi",
+       subtitle = " ",
+       x = "Madde Guclugu (P) -> (0: Zor, 1: Kolay)",
+       y = "Ayirt Edicilik (Rjx)",
+       color = "Madde Durumu") +
+  
+  # Temiz bir görünüm
+  theme_minimal() +
+  xlim(0, 1) + ylim(-0.1, 1)
+```
+
